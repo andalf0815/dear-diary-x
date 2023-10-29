@@ -3,9 +3,10 @@ import { Outlet } from 'react-router-dom';
 function Navigation() {
   return (
     <>
-      <div>
-        <h1>Navigation</h1>
-      </div>
+      <nav>
+        <h1>Dear Diary</h1>
+        <button>Logout</button>
+      </nav>
       <Outlet />
     </>
   );
