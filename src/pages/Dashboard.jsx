@@ -1,10 +1,10 @@
 import MemoryCardsSection from '../components/MemoryCardsSection';
-import NewMemory from '../components/NewMemoryForm';
+import NewMemoryForm from '../components/NewMemoryForm';
 
 function Dashboard() {
   return (
     <>
-      <NewMemory />
+      <NewMemoryForm />
       <MemoryCardsSection />
     </>
   );

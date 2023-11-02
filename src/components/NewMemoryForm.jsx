@@ -1,20 +1,20 @@
-import { useState } from 'react';
+import { signal } from '@preact/signals-react';
 
-function NewMemory() {
-  const [isActive, setIsActive] = useState(false);
+const isActive = signal(false);
 
+function NewMemoryForm() {
   return (
     <div
-      className={`flex flex-col items-center w-full ${isActive ? 'border-2' : ''} group ${isActive ? 'is-active' : ''}`}
+      className={`flex flex-col items-center w-full ${isActive.value ? 'border-2' : ''} group ${isActive.value ? 'is-active' : ''}`}
     >
       <input
-        onFocus={() => setIsActive(true)}
+        onFocus={() => isActive.value = true}
         type='text'
         placeholder='Add new memory'
         className='w-60 border-2 rounded-md'
       />
       <div
-        onClick={() => setIsActive(false)}
+        onClick={() => isActive.value = false}
         className='rotate-45 text-lg absolute right-10 cursor-pointer group-[:not(.is-active)]:hidden'
       >
         +
@@ -26,4 +26,4 @@ function NewMemory() {
   );
 }
 
-export default NewMemory;
+export default NewMemoryForm;
