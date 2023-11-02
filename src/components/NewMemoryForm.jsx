@@ -6,8 +6,8 @@ function NewMemoryForm() {
   return (
     <div className='flex justify-center w-full h-24'>
       <div
-        className={`flex flex-col items-center w-4/6 h-[450px] ${
-          isActive.value ? 'border-2 absolute bg-slate-50' : 'relative'
+        className={`flex flex-col items-center w-4/6 ${
+          isActive.value ? 'h-[450px] border-2 absolute bg-slate-50' : 'relative h-0'
         } group ${isActive.value ? 'is-active' : ''}`}
       >
         <input
