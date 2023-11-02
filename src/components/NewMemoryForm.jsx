@@ -6,15 +6,15 @@ function NewMemoryForm() {
   return (
     <div className='flex justify-center w-full h-24'>
       <div
-        className={`flex flex-col items-center w-4/6 ${
-          isActive.value ? 'h-[450px] border-2 absolute bg-slate-50' : 'relative h-0'
-        } group ${isActive.value ? 'is-active' : ''} sm:w-11/12`}
+        className={`absolute flex flex-col items-center w-4/6 rounded-md shadow-lg ${
+          isActive.value ? 'h-[550px] border-2 bg-white is-active' : 'relative h-0'
+        } group sm:w-11/12`}
       >
         <input
           onFocus={() => (isActive.value = true)}
           type='text'
           placeholder='Add new memory'
-          className='w-60 border-b-2 focus:border-b-slate-500 focus:outline-none'
+          className='w-60 border-b-2 mt-2 focus:border-b-slate-500 focus:outline-none'
         />
         <div
           onClick={() => (isActive.value = false)}
