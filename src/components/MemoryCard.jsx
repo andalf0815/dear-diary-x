@@ -1,6 +1,6 @@
 function MemoryCard() {
   return (
-    <div className='card-container min-w-[500px] sm:min-w-full p-3 snap-center'>
+    <div className='card-container min-w-[550px] sm:min-w-full p-3 snap-center'>
       <div className='card flex flex-col p-4 border-2 rounded-md border-slate-400'>
         <p>3 days ago</p>
         <h1>😁 My second try for Dear Diary</h1>

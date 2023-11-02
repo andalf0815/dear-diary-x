@@ -7,7 +7,7 @@ function Navigation() {
         <h1 className='flex items-center'>Dear Diary</h1>
         <Link to='/logout' className='flex items-center'>Logout</Link>
       </nav>
-      <main className='p-7 flex flex-col items-center'>
+      <main className='p-5 flex flex-col items-center'>
         <Outlet />
       </main>
     </>

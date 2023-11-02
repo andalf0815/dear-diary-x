@@ -8,7 +8,7 @@ function NewMemoryForm() {
       <div
         className={`flex flex-col items-center w-4/6 ${
           isActive.value ? 'h-[450px] border-2 absolute bg-slate-50' : 'relative h-0'
-        } group ${isActive.value ? 'is-active' : ''}`}
+        } group ${isActive.value ? 'is-active' : ''} sm:w-11/12`}
       >
         <input
           onFocus={() => (isActive.value = true)}
