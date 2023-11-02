@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.input-underline {
+    @apply border-b-2 focus:border-b-slate-500 focus:outline-none;
+  }
