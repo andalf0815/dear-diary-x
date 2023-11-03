@@ -3,7 +3,16 @@ import TagGroup from './TagGroup';
 import EmotionRadioButton from './EmotionRadioButton';
 
 function NewMemoryForm() {
-  const [newMemory, setNewMemory] = useState({});
+  const [newMemory, setNewMemory] = useState({
+    id: '',
+    title: '',
+    favorite: '',
+    emotion: '',
+    description: '',
+    activityTags: [],
+    locationTags: [],
+    peopleTags: [],
+  });
 
   const emotions = [
     '😀',
@@ -31,9 +40,25 @@ function NewMemoryForm() {
   const [isActive, setIsActive] = useState(false);
   const [selectedEmotion, setSelectedEmotion] = useState('');
 
-  // useEffect(() => {
-  //   console.log(newMemory);
-  // },[newMemory])
+  const handleAddTag = (type, tag) => {
+    setNewMemory((prevMemory) => {
+      const updatedTags = prevMemory[type] ? [...prevMemory[type], tag] : [tag];
+      return {
+        ...prevMemory,
+        [type]: updatedTags,
+      };
+    });
+  };
+
+  const handleRemoveTag = (type, indexToRemove) => {
+    setNewMemory((prevMemory) => {
+      const updatedTags = prevMemory[type].filter((_, index) => index !== indexToRemove);
+      return {
+        ...prevMemory,
+        [type]: updatedTags,
+      };
+    });
+  };
 
   return (
     <div className='flex flex-col items-center justify-center w-full h-24'>
@@ -54,12 +79,12 @@ function NewMemoryForm() {
         >
           +
         </span>
-        <div className='w-full h-full px-5 overflow-auto'>
+        <div className='flex flex-col gap-2 w-full h-full p-5'>
           <div className='flex justify-between'>
             <input type='date' className='input-underline' />
             <button>Favorite</button>
           </div>
-          <div className='emotions flex'>
+          <div className='emotions flex h-16 overflow-x-auto overflow-y-hidden'>
             {emotions.map((emotion, index) => (
               <EmotionRadioButton
                 key={index}
@@ -76,30 +101,25 @@ function NewMemoryForm() {
           <textarea placeholder='Tell something about your day' rows='5' className='input-underline w-full'></textarea>
           <div>
             <TagGroup
-              tags={newMemory.tags ?? []}
-              onAddTag={(tag) => {
-                setNewMemory((oldMemory) => {
-                  const updatedTags = oldMemory.tags ? [...oldMemory.tags, tag] : [tag];
-                  return {
-                    ...oldMemory,
-                    tags: updatedTags,
-                  };
-                });
-              }}
-              onRemoveTag={(indexToRemove) => {
-                setNewMemory((oldMemory) => {
-                  const updatedTags = oldMemory.tags.filter((_, index) => indexToRemove !== index);
-                  return {
-                    ...oldMemory,
-                    tags: updatedTags,
-                  };
-                });
-              }}
+              tagTitle='Activities'
+              tags={newMemory.activityTags}
+              onAddTag={(tag) => handleAddTag('activityTags', tag)}
+              onRemoveTag={(index) => handleRemoveTag('activityTags', index)}
             />
-            {/* <TagGroup />
-            <TagGroup /> */}
+            <TagGroup
+              tagTitle='Locations'
+              tags={newMemory.locationTags}
+              onAddTag={(tag) => handleAddTag('locationTags', tag)}
+              onRemoveTag={(index) => handleRemoveTag('locationTags', index)}
+            />
+            <TagGroup
+              tagTitle='People'
+              tags={newMemory.peopleTags}
+              onAddTag={(tag) => handleAddTag('peopleTags', tag)}
+              onRemoveTag={(index) => handleRemoveTag('peopleTags', index)}
+            />
           </div>
-          <button>Save</button>
+          <button className=' rounded-full p-2 bg-blue-500 text-white focus:outline-none hover:bg-blue-600 active:bg-blue-700'>Save</button>
         </div>
       </div>
     </div>
