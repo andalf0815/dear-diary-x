@@ -54,7 +54,7 @@ function NewMemoryForm() {
         >
           +
         </span>
-        <div className='w-full h-full px-5'>
+        <div className='w-full h-full px-5 overflow-auto'>
           <div className='flex justify-between'>
             <input type='date' className='input-underline' />
             <button>Favorite</button>
@@ -80,6 +80,15 @@ function NewMemoryForm() {
               onAddTag={(tag) => {
                 setNewMemory((oldMemory) => {
                   const updatedTags = oldMemory.tags ? [...oldMemory.tags, tag] : [tag];
+                  return {
+                    ...oldMemory,
+                    tags: updatedTags,
+                  };
+                });
+              }}
+              onRemoveTag={(indexToRemove) => {
+                setNewMemory((oldMemory) => {
+                  const updatedTags = oldMemory.tags.filter((_, index) => indexToRemove !== index);
                   return {
                     ...oldMemory,
                     tags: updatedTags,
