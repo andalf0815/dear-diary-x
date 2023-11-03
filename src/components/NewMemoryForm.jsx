@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TagGroup from './TagGroup';
 import EmotionRadioButton from './EmotionRadioButton';
 
 function NewMemoryForm() {
+  const [newMemory, setNewMemory] = useState({});
+
   const emotions = [
     '😀',
     '😅',
@@ -28,6 +30,10 @@ function NewMemoryForm() {
   ];
   const [isActive, setIsActive] = useState(false);
   const [selectedEmotion, setSelectedEmotion] = useState('');
+
+  // useEffect(() => {
+  //   console.log(newMemory);
+  // },[newMemory])
 
   return (
     <div className='flex flex-col items-center justify-center w-full h-24'>
@@ -69,9 +75,20 @@ function NewMemoryForm() {
           </div>
           <textarea placeholder='Tell something about your day' rows='5' className='input-underline w-full'></textarea>
           <div>
-            <TagGroup />
-            <TagGroup />
-            <TagGroup />
+            <TagGroup
+              tags={newMemory.tags ?? []}
+              onAddTag={(tag) => {
+                setNewMemory((oldMemory) => {
+                  const updatedTags = oldMemory.tags ? [...oldMemory.tags, tag] : [tag];
+                  return {
+                    ...oldMemory,
+                    tags: updatedTags,
+                  };
+                });
+              }}
+            />
+            {/* <TagGroup />
+            <TagGroup /> */}
           </div>
           <button>Save</button>
         </div>
