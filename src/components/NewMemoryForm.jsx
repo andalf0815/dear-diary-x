@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import TagGroup from './TagGroup';
 import EmotionRadioButton from './EmotionRadioButton';
 
-function NewMemoryForm() {
+function NewMemoryForm(props) {
   const [newMemory, setNewMemory] = useState({
     id: '',
     title: '',
-    favorite: '',
+    favorite: false,
+    memoryDate: '',
     emotion: '',
     description: '',
     activityTags: [],
@@ -38,7 +39,10 @@ function NewMemoryForm() {
     '🤕',
   ];
   const [isActive, setIsActive] = useState(false);
-  const [selectedEmotion, setSelectedEmotion] = useState('');
+
+  useEffect(() => {
+    console.log(newMemory);
+  }, [newMemory]);
 
   const handleAddTag = (type, tag) => {
     setNewMemory((prevMemory) => {
@@ -63,47 +67,77 @@ function NewMemoryForm() {
   return (
     <div className='flex flex-col items-center justify-center w-full h-24'>
       <input
-        onFocus={() => setIsActive(true)}
+        id='title'
+        value={newMemory.title}
         type='text'
         placeholder='Add new memory'
         className='absolute top-20 z-10 w-60 text-xl input-underline'
+        onFocus={() => setIsActive(true)}
+        onChange={(event) => {
+          setNewMemory((prevMemory) => ({ ...prevMemory, title: event.target.value }));
+        }}
+        onBlur={(event) => {
+          setNewMemory((prevMemory) => ({ ...prevMemory, title: event.target.value.trim() }));
+        }}
       />
       <div
-        className={`absolute top-16 flex flex-col items-center w-4/6 pt-20 bg-white border-2 rounded-md shadow-lg ${
+        className={`absolute top-16 flex flex-col items-center w-[500px] pt-20 bg-white border-2 rounded-md shadow-lg ${
           isActive ? 'block is-active' : 'hidden'
-        } group sm:w-11/12`}
+        }  sm:w-11/12`}
       >
         <span
+          id='close-new-memory-form'
+          className='rotate-45 text-lg absolute top-0 right-2 cursor-pointer'
           onClick={() => setIsActive(false)}
-          className='rotate-45 text-lg absolute top-0 right-2 cursor-pointer group-[:not(.is-active)]:hidden'
         >
           +
         </span>
         <div className='flex flex-col gap-6 w-full h-full p-5'>
-          {/* <div className='flex justify-between'> */}
-            <button>Favorite</button>
-            <input type='date' className='input-underline' />
-          {/* </div> */}
-          <div className='emotions flex h-10 overflow-x-auto overflow-y-hidden'>
+          <button
+            id='favorite'
+            onClick={(event) => {
+              setNewMemory((prevMemory) => ({ ...prevMemory, favorite: !prevMemory.favorite }));
+            }}
+          >
+            {newMemory.favorite ? 'Favorite' : 'No Favorite'}
+          </button>
+          <input
+            id='memory-date'
+            type='date'
+            className='input-underline w-40'
+            onChange={(event) => {
+              setNewMemory((prevMemory) => ({ ...prevMemory, memoryDate: event.target.value }));
+            }}
+          />
+          <div id='emotions' className='flex h-10 overflow-x-auto overflow-y-hidden'>
             {emotions.map((emotion, index) => (
               <EmotionRadioButton
                 key={index}
                 onSelectedEmotion={(emotion) => {
                   console.log(emotion);
-                  setSelectedEmotion(emotion);
+                  setNewMemory((prevMemory) => ({ ...prevMemory, emotion: emotion }));
                 }}
-                selected={emotion === selectedEmotion}
+                selected={emotion === newMemory.emotion}
                 emotion={emotion}
                 index={index}
               />
             ))}
           </div>
-          <label htmlFor='memory-description' className='text-sm'>Details</label>
+          <label htmlFor='memory-description' className='text-sm'>
+            Details
+          </label>
           <textarea
-            id='memoryDescription'
+            id='memory-description'
+            value={newMemory.description}
             placeholder='Tell something about your day'
             rows='5'
             className=' input-underline rounded-lg border-2 focus:border-blue-500'
+            onChange={(event) => {
+              setNewMemory((prevMemory) => ({ ...prevMemory, description: event.target.value }));
+            }}
+            onBlur={(event) => {
+              setNewMemory((prevMemory) => ({ ...prevMemory, description: event.target.value.trim() }));
+            }}
           ></textarea>
           <div className='flex flex-col gap-3'>
             <TagGroup
@@ -125,9 +159,24 @@ function NewMemoryForm() {
               onRemoveTag={(index) => handleRemoveTag('peopleTags', index)}
             />
           </div>
-          <button className=' rounded-full p-2 bg-blue-500 text-white focus:outline-none hover:bg-blue-600 active:bg-blue-700'>
-            Save
-          </button>
+          <div className='flex flex-col gap-2 px-5'>
+            <button
+              onClick={() => {
+                props.onAddMemory && props.onAddMemory(newMemory);
+              }}
+              className='rounded-full p-2 bg-blue-500 text-white focus:outline-none hover:bg-blue-600 active:bg-blue-700'
+            >
+              Save
+            </button>
+            <button
+              onClick={() => {
+                props.onAddMemory && props.onAddMemory(newMemory);
+              }}
+              className='rounded-full p-2 bg-red-500 text-white focus:outline-none hover:bg-red-600 active:bg-red-700'
+            >
+              Clear
+            </button>
+          </div>
         </div>
       </div>
     </div>
