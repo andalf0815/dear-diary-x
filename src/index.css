@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  @apply text-base;
+}
+
 .input-underline {
-    @apply border-b-2 focus:border-b-slate-500 focus:outline-none;
-  }
+  @apply px-3 py-1 text-slate-700 border-b-2 focus:border-b-blue-500 outline-none;
+}

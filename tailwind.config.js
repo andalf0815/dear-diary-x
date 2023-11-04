@@ -18,7 +18,11 @@ export default {
       sm: { max: '639px' },
       // => @media (max-width: 639px) { ... }
     },
-    extend: {},
+    extend: {
+      fontSize: {
+        base: '0.9rem', // 1rem is equivalent to the font-size of the root element (<html>)
+      },
+    },
   },
   plugins: [],
 };
