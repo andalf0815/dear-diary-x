@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { useState } from 'react';
 import TagGroup from './TagGroup';
 import EmotionRadioButton from './EmotionRadioButton';
 
 function NewMemoryForm(props) {
-  const [newMemory, setNewMemory] = useState({
+  const initializedMemoryObject = {
     id: '',
     title: '',
     favorite: false,
@@ -13,7 +14,10 @@ function NewMemoryForm(props) {
     activityTags: [],
     locationTags: [],
     peopleTags: [],
-  });
+  };
+
+  const [newMemory, setNewMemory] = useState(initializedMemoryObject);
+  const [isActive, setIsActive] = useState(false);
 
   const emotions = [
     '😀',
@@ -38,11 +42,10 @@ function NewMemoryForm(props) {
     '🤒',
     '🤕',
   ];
-  const [isActive, setIsActive] = useState(false);
 
-  useEffect(() => {
-    console.log(newMemory);
-  }, [newMemory]);
+  const validateForm = () => {
+    return newMemory.title && newMemory.memoryDate && newMemory.emotion;
+  };
 
   const handleAddTag = (type, tag) => {
     setNewMemory((prevMemory) => {
@@ -103,6 +106,7 @@ function NewMemoryForm(props) {
           </button>
           <input
             id='memory-date'
+            value={newMemory.memoryDate}
             type='date'
             className='input-underline w-40'
             onChange={(event) => {
@@ -114,7 +118,6 @@ function NewMemoryForm(props) {
               <EmotionRadioButton
                 key={index}
                 onSelectedEmotion={(emotion) => {
-                  console.log(emotion);
                   setNewMemory((prevMemory) => ({ ...prevMemory, emotion: emotion }));
                 }}
                 selected={emotion === newMemory.emotion}
@@ -162,7 +165,13 @@ function NewMemoryForm(props) {
           <div className='flex flex-col gap-2 px-5'>
             <button
               onClick={() => {
-                props.onAddMemory && props.onAddMemory(newMemory);
+                if (validateForm()) {
+                  const updatedMemory = { ...newMemory, id: uuidv4() };
+                  setNewMemory(updatedMemory);
+                  props.onAddMemory && props.onAddMemory(updatedMemory);
+                } else {
+                  alert('Please fill out atl least date, title and a emotion!');
+                }
               }}
               className='rounded-full p-2 bg-blue-500 text-white focus:outline-none hover:bg-blue-600 active:bg-blue-700'
             >
@@ -170,7 +179,7 @@ function NewMemoryForm(props) {
             </button>
             <button
               onClick={() => {
-                props.onAddMemory && props.onAddMemory(newMemory);
+                setNewMemory(initializedMemoryObject);
               }}
               className='rounded-full p-2 bg-red-500 text-white focus:outline-none hover:bg-red-600 active:bg-red-700'
             >
