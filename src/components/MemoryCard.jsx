@@ -1,4 +1,6 @@
-function MemoryCard() {
+function MemoryCard(props) {
+  const memory = props.memory;
+  
   return (
     <div className='min-w-[550px] sm:min-w-full p-3 snap-center'>
       <div className='flex flex-col p-4 border-slate-400 border-2 rounded-md shadow-lg'>

@@ -1,11 +1,12 @@
 import MemoryCard from './MemoryCard';
 
-function MemoryCardsSection() {
+function MemoryCardsSection(props) {
+  console.log(props.memories);
   return (
     <section className='flex flex-row justify-between w-full overflow-auto snap-mandatory snap-x'>
-      <MemoryCard />
-      <MemoryCard />
-      <MemoryCard />
+      {props.memories.map((memory) => (
+        <MemoryCard memory={memory} />
+      ))}
     </section>
   );
 }

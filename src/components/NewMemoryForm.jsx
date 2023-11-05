@@ -5,7 +5,6 @@ import EmotionRadioButton from './EmotionRadioButton';
 
 function NewMemoryForm(props) {
   const initializedMemoryObject = {
-    id: '',
     title: '',
     favorite: false,
     memoryDate: '',
@@ -167,8 +166,8 @@ function NewMemoryForm(props) {
               onClick={() => {
                 if (validateForm()) {
                   const updatedMemory = { ...newMemory, id: uuidv4() };
-                  setNewMemory(updatedMemory);
                   props.onAddMemory && props.onAddMemory(updatedMemory);
+                  setNewMemory(initializedMemoryObject);
                 } else {
                   alert('Please fill out atl least date, title and a emotion!');
                 }
