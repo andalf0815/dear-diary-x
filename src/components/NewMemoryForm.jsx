@@ -4,10 +4,14 @@ import TagGroup from './TagGroup';
 import EmotionRadioButton from './EmotionRadioButton';
 
 function NewMemoryForm(props) {
+  const getCurrentDate = () => {
+    return new Date().toISOString().split('T')[0];
+  };
+
   const initializedMemoryObject = {
     title: '',
     favorite: false,
-    memoryDate: '',
+    memoryDate: getCurrentDate(),
     emotion: '',
     description: '',
     activityTags: [],
@@ -16,7 +20,7 @@ function NewMemoryForm(props) {
   };
 
   const [newMemory, setNewMemory] = useState(initializedMemoryObject);
-  const [isActive, setIsActive] = useState(false);
+  const [isFormActive, setIsFormActive] = useState(false);
 
   const emotions = [
     '😀',
@@ -74,7 +78,7 @@ function NewMemoryForm(props) {
         type='text'
         placeholder='Add new memory'
         className='absolute top-20 z-10 w-60 text-xl input-underline'
-        onFocus={() => setIsActive(true)}
+        onFocus={() => setIsFormActive(true)}
         onChange={(event) => {
           setNewMemory((prevMemory) => ({ ...prevMemory, title: event.target.value }));
         }}
@@ -84,13 +88,13 @@ function NewMemoryForm(props) {
       />
       <div
         className={`absolute top-16 flex flex-col items-center w-[500px] pt-20 bg-white border-2 rounded-md shadow-lg ${
-          isActive ? 'block is-active' : 'hidden'
+          isFormActive ? 'block is-active' : 'hidden'
         }  sm:w-11/12`}
       >
         <span
           id='close-new-memory-form'
           className='rotate-45 text-lg absolute top-0 right-2 cursor-pointer'
-          onClick={() => setIsActive(false)}
+          onClick={() => setIsFormActive(false)}
         >
           +
         </span>
@@ -168,6 +172,7 @@ function NewMemoryForm(props) {
                   const updatedMemory = { ...newMemory, id: uuidv4() };
                   props.onAddMemory && props.onAddMemory(updatedMemory);
                   setNewMemory(initializedMemoryObject);
+                  setIsFormActive(false);
                 } else {
                   alert('Please fill out atl least date, title and a emotion!');
                 }

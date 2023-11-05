@@ -1,14 +1,23 @@
 function TagGroup({ tagTitle, tags = [], onAddTag, onRemoveTag }) {
+  const addTag = (event) => {
+    if (event.target.value.trim()) {
+      onAddTag && onAddTag(event.target.value);
+      event.target.value = '';
+    }
+  };
+
   return (
-    <div className="h-16">
+    <div className='h-16'>
       <input
         type='text'
         placeholder={tagTitle}
         onKeyDown={(event) => {
-          if (event.key === 'Enter' && event.target.value.trim()) {
-            onAddTag && onAddTag(event.target.value);
-            event.target.value = '';
+          if (event.key === 'Enter') {
+            addTag(event);
           }
+        }}
+        onBlur={(event) => {
+          addTag(event);
         }}
         className='input-underline w-full'
       />

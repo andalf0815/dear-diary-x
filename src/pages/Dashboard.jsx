@@ -13,7 +13,7 @@ const exampleMemory = [
     emotion: '😎',
     description: 'Lorem ipsum blabla',
     activityTags: ['sleeping', 'eating'],
-    locationTags: ['@Home'],
+    locationTags: ['@Home', 'blabla', 'bkdhfhdi '],
     peopleTags: ['Me'],
   },
   {

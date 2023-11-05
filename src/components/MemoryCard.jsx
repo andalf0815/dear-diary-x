@@ -1,26 +1,36 @@
 function MemoryCard(props) {
   const memory = props.memory;
-  
+
   return (
     <div className='min-w-[550px] sm:min-w-full p-3 snap-center'>
       <div className='flex flex-col p-4 border-slate-400 border-2 rounded-md shadow-lg'>
         <p>3 days ago</p>
-        <h1>😁 My second try for Dear Diary</h1>
-        <div className='flex'>
+        <h1>
+          {memory.emotion} {memory.title}
+        </h1>
+        <div className='flex justify-between'>
           <div className='flex flex-col'>
-            <p>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad maxime, quae ratione velit id mollitia? Natus
-              quasi nihil eligendi aliquid beatae, saepe temporibus adipisci obcaecati deserunt vero, vitae doloremque
-              a?
-            </p>
+            <p>{memory.description}</p>
             <div className='flex'>
-              <p>klettern | essen | spielen</p>
+              <p>
+                {memory.activityTags.map(
+                  (tag, index) => `${tag} ${index !== memory.activityTags.length - 1 ? '| ' : ''}`
+                )}
+              </p>
             </div>
             <div className='flex'>
-              <p>Jakob | Chrissi</p>
+              <p>
+                {' '}
+                {memory.locationTags.map(
+                  (tag, index) => `${tag} ${index !== memory.locationTags.length - 1 ? '| ' : ''}`
+                )}
+              </p>
             </div>
             <div className='flex'>
-              <p>Spielplatz | Daheim</p>
+              <p>
+                {' '}
+                {memory.peopleTags.map((tag, index) => `${tag} ${index !== memory.peopleTags.length - 1 ? '| ' : ''}`)}
+              </p>
             </div>
           </div>
           <div className='flex flex-col'>
