@@ -1,10 +1,16 @@
 function MemoryCard(props) {
   const memory = props.memory;
 
+  const today = new Date();
+  const memoryDate = new Date(memory.memoryDate);
+  const diffInDays = Math.floor((today.getTime() - memoryDate.getTime()) / (1000 * 3600 * 24));
+
   return (
-    <div className='min-w-[550px] sm:min-w-full p-3 snap-center'>
-      <div className='flex flex-col p-4 border-slate-400 border-2 rounded-md shadow-lg'>
-        <p>3 days ago</p>
+    <div id='memory-container' className='max-w-[60rem] w-1/2 lg:min-w-full p-3 snap-center'>
+      <div id='memory' className='flex flex-col h-[20rem] p-4 border-slate-400 border-2 rounded-md shadow-lg'>
+        <p>
+          {diffInDays !== 0 ? `${diffInDays} days ago, on` : 'Today, on'} {memory.memoryDate}
+        </p>
         <h1>
           {memory.emotion} {memory.title}
         </h1>
