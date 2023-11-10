@@ -10,13 +10,13 @@ function MemoryCard(props) {
 
   let timeAgoText = '';
 
-  if (diffInDays <= 1) {
+  if (diffInDays <= 1) { // Check if today or yesterday
     timeAgoText = `${diffInDays < 1 ? 'Today' : 'Yesterday'}`;
-  } else if (diffInDays < 8) {
+  } else if (diffInDays < 8) { // Check if the current week
     timeAgoText = `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
-  } else if (today.minus({ months: 1 }).hasSame(memoryDate, 'day')) {
+  } else if (today.minus({ months: 1 }).hasSame(memoryDate, 'day')) { // Check if exactly a month ago
     timeAgoText = '1 month ago';
-  } else if (diffInYears >= 1 && today.minus({ years: Math.floor(diffInYears) }).hasSame(memoryDate, 'day')) {
+  } else if (diffInYears >= 1 && today.minus({ years: Math.floor(diffInYears) }).hasSame(memoryDate, 'day')) { // Check if one or more whole years
     timeAgoText = Math.floor(diffInYears) + ` year${diffInYears !== 1 ? 's' : ''} ago`;
   } else {
     timeAgoText = 'ka';
