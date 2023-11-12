@@ -10,23 +10,29 @@ function MemoryCard(props) {
 
   let timeAgoText = '';
 
-  if (diffInDays <= 1) { // Check if today or yesterday
+  if (diffInDays <= 1) {
+    // Check if today or yesterday
     timeAgoText = `${diffInDays < 1 ? 'Today' : 'Yesterday'}`;
-  } else if (diffInDays < 8) { // Check if the current week
+  } else if (diffInDays === 7) {
+    timeAgoText = '1 week ago';
+  } else if (diffInDays < 8) {
+    // Check if the current week
     timeAgoText = `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
-  } else if (today.minus({ months: 1 }).hasSame(memoryDate, 'day')) { // Check if exactly a month ago
+  } else if (today.minus({ months: 1 }).hasSame(memoryDate, 'day')) {
+    // Check if exactly a month ago
     timeAgoText = '1 month ago';
-  } else if (diffInYears >= 1 && today.minus({ years: Math.floor(diffInYears) }).hasSame(memoryDate, 'day')) { // Check if one or more whole years
+  } else if (diffInYears >= 1 && today.minus({ years: Math.floor(diffInYears) }).hasSame(memoryDate, 'day')) {
+    // Check if one or more whole years
     timeAgoText = Math.floor(diffInYears) + ` year${diffInYears !== 1 ? 's' : ''} ago`;
   } else {
-    timeAgoText = 'ka';
+    timeAgoText = '';
   }
 
   return (
     <div id='memory-container' className='max-w-[60rem] min-w-[50%] lg:min-w-full p-3 snap-center'>
       <div id='memory' className='flex flex-col h-[20rem] p-4 border-slate-400 border-2 rounded-md shadow-lg'>
         <p>
-          {timeAgoText} on {memory.memoryDate}
+          {timeAgoText ? `${timeAgoText} on ` : ''} {memory.memoryDate}
         </p>
         <h1>
           {memory.emotion} {memory.title}
