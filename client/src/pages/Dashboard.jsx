@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { fetchMemories } from '../services/apiMemoriesService';
+
 import MemoryCardsSection from '../components/MemoryCardsSection';
 import NewMemoryForm from '../components/NewMemoryForm';
 
@@ -31,6 +34,13 @@ const exampleMemory = [
 
 function Dashboard() {
   const [memories, setMemories] = useState(exampleMemory || []);
+
+  useEffect(() => {
+    (async function () {
+      console.log('memories', await fetchMemories());
+    })();
+  }, []);
+
   console.log(memories);
   return (
     <>
