@@ -33,15 +33,15 @@ const exampleMemory = [
 ];
 
 function Dashboard() {
-  const [memories, setMemories] = useState(exampleMemory || []);
+  const [memories, setMemories] = useState([]);
 
   useEffect(() => {
     (async function () {
-      console.log('memories', await fetchMemories());
+      const loadedMemories = await fetchMemories();
+      setMemories(loadedMemories);
     })();
   }, []);
 
-  console.log(memories);
   return (
     <>
       <NewMemoryForm

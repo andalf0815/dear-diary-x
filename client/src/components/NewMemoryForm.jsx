@@ -1,5 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { useState } from 'react';
+
+import { saveMemory } from '../services/apiMemoriesService';
+
 import TagGroup from './TagGroup';
 import EmotionRadioButton from './EmotionRadioButton';
 
@@ -167,9 +170,15 @@ function NewMemoryForm(props) {
           </div>
           <div className='flex flex-col gap-2 px-5'>
             <button
-              onClick={() => {
+              onClick={async () => {
                 if (validateForm()) {
-                  const updatedMemory = { ...newMemory, id: uuidv4() };
+                  const updatedMemory = { ...newMemory, _id: uuidv4() };
+                  // save memory
+                  try {
+                    await saveMemory(updatedMemory);
+                  } catch (error) {
+                    console.error(error);
+                  }
                   props.onAddMemory && props.onAddMemory(updatedMemory);
                   setNewMemory(initializedMemoryObject);
                   setIsFormActive(false);
