@@ -1,4 +1,6 @@
 import { DateTime } from 'luxon';
+import { MdDelete } from 'react-icons/md';
+import { deleteMemory } from '../services/apiMemoriesService';
 
 function MemoryCard(props) {
   const memory = props.memory;
@@ -31,9 +33,24 @@ function MemoryCard(props) {
   return (
     <div id='memory-container' className='max-w-[60rem] min-w-[50%] lg:min-w-full p-3 snap-start'>
       <div id='memory' className='flex flex-col h-[20rem] p-4 border-slate-400 border-2 rounded-md shadow-lg'>
-        <p>
-          {timeAgoText ? `${timeAgoText} on ` : ''} {memory.memoryDate}
-        </p>
+        <div id='memory-header' className='flex justify-between'>
+          <p>
+            {timeAgoText ? `${timeAgoText} on ` : ''} {memory.memoryDate}
+          </p>
+          <div id='memory-functions' className='flex'>
+            <MdDelete
+              className='text-red-700 text-2xl cursor-pointer'
+              onClick={async () => {
+                try {
+                  await deleteMemory(memory._id);
+                  return props.onDeleteMemory && props.onDeleteMemory(memory._id);
+                } catch (error) {
+                  console.error(error);
+                }
+              }}
+            />
+          </div>
+        </div>
         <h1>
           {memory.emotion} {memory.title}
         </h1>

@@ -14,7 +14,21 @@ export async function saveMemory(data) {
     body: JSON.stringify(data),
   });
 
-  if (response.ok) {
-    console.log('yuhu');
+  if (!response.ok) {
+    throw new Error('Failed to save memory');
   }
+
+  return response.json();
+}
+
+export async function deleteMemory(memoryId) {
+  const response = await fetch(`/api/memories/${memoryId}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to delete memory');
+  }
+
+  return memoryId;
 }
