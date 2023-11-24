@@ -73,6 +73,36 @@ function NewMemoryForm(props) {
     });
   };
 
+  const handleSaveClick = async () => {
+    if (validateForm()) {
+      const updatedMemory = { ...newMemory, _id: uuidv4() };
+      // Save memory
+      try {
+        const response = await saveMemory(updatedMemory);
+
+        if (response.status === 409) {
+          alert('Memory on this date already exists!');
+          return;
+        } else if (!response.ok) {
+          alert('There was a problem with saving the memory!');
+          return;
+        }
+
+        props.onAddMemory && props.onAddMemory(updatedMemory);
+        setNewMemory(initializedMemoryObject);
+        setIsFormActive(false);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      alert('Please fill out at least date, title and a emotion!');
+    }
+  };
+
+  const handleClearClick = () => {
+    setNewMemory(initializedMemoryObject);
+  };
+
   return (
     <div className='flex flex-col items-center justify-center w-full h-24'>
       <input
@@ -170,30 +200,13 @@ function NewMemoryForm(props) {
           </div>
           <div className='flex flex-col gap-2 px-5'>
             <button
-              onClick={async () => {
-                if (validateForm()) {
-                  const updatedMemory = { ...newMemory, _id: uuidv4() };
-                  // save memory
-                  try {
-                    await saveMemory(updatedMemory);
-                  } catch (error) {
-                    console.error(error);
-                  }
-                  props.onAddMemory && props.onAddMemory(updatedMemory);
-                  setNewMemory(initializedMemoryObject);
-                  setIsFormActive(false);
-                } else {
-                  alert('Please fill out atl least date, title and a emotion!');
-                }
-              }}
+              onClick={handleSaveClick}
               className='rounded-full p-2 bg-blue-500 text-white focus:outline-none hover:bg-blue-600 active:bg-blue-700'
             >
               Save
             </button>
             <button
-              onClick={() => {
-                setNewMemory(initializedMemoryObject);
-              }}
+              onClick={handleClearClick}
               className='rounded-full p-2 bg-red-500 text-white focus:outline-none hover:bg-red-600 active:bg-red-700'
             >
               Clear

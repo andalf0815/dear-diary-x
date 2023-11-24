@@ -16,6 +16,14 @@ const getAllMemories = async (req, res) => {
 const saveMemory = async (req, res) => {
   const data = req.body;
   try {
+    // Check if a memory with the same UUID already exists
+    const existingMemory = await Memory.findOne({ memoryDate: data.memoryDate });
+    if (existingMemory) {
+      // If memory exists, send a response and do not save a new one
+      return res.status(409).send('Memory with this UUID already exists');
+    }
+
+    // If no existing memory, create a new one
     const memories = await Memory.create(data);
     res.json(memories);
   } catch (err) {
