@@ -24,8 +24,31 @@ const saveMemory = async (req, res) => {
     }
 
     // If no existing memory, create a new one
-    const memories = await Memory.create(data);
-    res.json(memories);
+    const memory = await Memory.create(data);
+    res.json(memory);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Server Error');
+  }
+};
+
+const updateMemory = async (req, res) => {
+  const data = req.body;
+  try {
+    const { _id, ...memoryData } = data; // Extract _id and other memory data
+
+    // Check if a memory with the same UUID already exists
+    const existingMemory = await Memory.findOne({ _id });
+
+    if (existingMemory) {
+      // If memory exists, update it
+      const memory = await Memory.updateOne({ _id }, memoryData);
+      res.json(memory);
+    } else {
+      // If no existing memory, create a new one
+      const newMemory = await Memory.create(data);
+      res.status(201).json(newMemory);
+    }
   } catch (err) {
     console.log(err);
     res.status(500).send('Server Error');
@@ -51,5 +74,6 @@ const deleteMemory = async (req, res) => {
 module.exports = {
   getAllMemories,
   saveMemory,
+  updateMemory,
   deleteMemory,
 };

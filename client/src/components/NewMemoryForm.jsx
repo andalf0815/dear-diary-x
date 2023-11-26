@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { saveMemory } from '../services/apiMemoriesService';
+import { saveMemory, updateMemory } from '../services/apiMemoriesService';
 
 import TagGroup from './TagGroup';
 import EmotionRadioButton from './EmotionRadioButton';
@@ -11,6 +11,7 @@ function NewMemoryForm(props) {
     return new Date().toISOString().split('T')[0];
   };
 
+  // Initialize the memory with an empty object
   const initializedMemoryObject = {
     title: '',
     favorite: false,
@@ -22,8 +23,21 @@ function NewMemoryForm(props) {
     peopleTags: [],
   };
 
-  const [newMemory, setNewMemory] = useState(initializedMemoryObject);
-  const [isFormActive, setIsFormActive] = useState(false);
+  const [newMemory, setNewMemory] = useState(initializedMemoryObject); // State for the memory object
+  const [isEditing, setIsEditing] = useState(false); // State if the form is in edit or creation mode
+
+  useEffect(() => {
+    if (props.memoryToEdit) {
+      setIsEditing(true);
+      setNewMemory({
+        ...props.memoryToEdit,
+        memoryDate: props.memoryToEdit.memoryDate.substring(0, 10), // Bring the date format to yyy-mm-dd
+      });
+    } else {
+      setIsEditing(false);
+      setNewMemory(initializedMemoryObject);
+    }
+  }, [props.memoryToEdit]);
 
   const emotions = [
     '😀',
@@ -53,6 +67,10 @@ function NewMemoryForm(props) {
     return newMemory.title && newMemory.memoryDate && newMemory.emotion;
   };
 
+  const handleFavoriteClick = () => {
+    setNewMemory((prevMemory) => ({ ...prevMemory, favorite: !prevMemory.favorite }));
+  };
+
   const handleAddTag = (type, tag) => {
     setNewMemory((prevMemory) => {
       const updatedTags = prevMemory[type] ? [...prevMemory[type], tag] : [tag];
@@ -75,22 +93,34 @@ function NewMemoryForm(props) {
 
   const handleSaveClick = async () => {
     if (validateForm()) {
-      const updatedMemory = { ...newMemory, _id: uuidv4() };
-      // Save memory
+      const isUpdate = newMemory._id ? true : false;
+      const memoryToSave = { ...newMemory };
+
       try {
-        const response = await saveMemory(updatedMemory);
+        // Create new Memory
+        if (!isUpdate) {
+          memoryToSave._id = uuidv4(); // Add an _id prop if its a new memory
+          const response = await saveMemory(memoryToSave);
 
-        if (response.status === 409) {
-          alert('Memory on this date already exists!');
-          return;
-        } else if (!response.ok) {
-          alert('There was a problem with saving the memory!');
-          return;
+          if (response.status === 409) {
+            alert('Memory on this date already exists!');
+            return;
+          } else if (!response.ok) {
+            alert('There was a problem with saving the memory!');
+            return;
+          }
+        } else {
+          // TODO: Update existing Memory
+          const response = await updateMemory(memoryToSave);
+
+          if (!response.ok) {
+            alert('There was a problem with updating the memory!');
+            return;
+          }
         }
-
-        props.onAddMemory && props.onAddMemory(updatedMemory);
+        props.onAddMemory && props.onAddMemory(memoryToSave);
         setNewMemory(initializedMemoryObject);
-        setIsFormActive(false);
+        handleFormVisibility(false);
       } catch (error) {
         console.error(error);
       }
@@ -101,6 +131,16 @@ function NewMemoryForm(props) {
 
   const handleClearClick = () => {
     setNewMemory(initializedMemoryObject);
+    props.onEditMemory && props.onEditMemory(null);
+  };
+
+  const handleFormVisibility = (status) => {
+    props.onSetFormVisibility && props.onSetFormVisibility(status);
+  };
+
+  const handleCloseClick = () => {
+    handleFormVisibility(false);
+    handleClearClick();
   };
 
   return (
@@ -111,7 +151,7 @@ function NewMemoryForm(props) {
         type='text'
         placeholder='Add new memory'
         className='absolute top-20 z-10 w-60 text-xl input-underline'
-        onFocus={() => setIsFormActive(true)}
+        onFocus={() => handleFormVisibility(true)}
         onChange={(event) => {
           setNewMemory((prevMemory) => ({ ...prevMemory, title: event.target.value }));
         }}
@@ -121,23 +161,18 @@ function NewMemoryForm(props) {
       />
       <div
         className={`absolute top-16 flex flex-col items-center w-[500px] pt-20 bg-white border-2 rounded-md shadow-lg ${
-          isFormActive ? 'block is-active' : 'hidden'
-        }  sm:w-11/12`}
+          props.isFormVisible ? 'block is-active' : 'hidden'
+        } ${isEditing ? 'border-blue-400' : 'border-green-400'} sm:w-11/12`}
       >
         <span
           id='close-new-memory-form'
           className='rotate-45 text-lg absolute top-0 right-2 cursor-pointer'
-          onClick={() => setIsFormActive(false)}
+          onClick={handleCloseClick}
         >
           +
         </span>
         <div className='flex flex-col gap-6 w-full h-full p-5'>
-          <button
-            id='favorite'
-            onClick={(event) => {
-              setNewMemory((prevMemory) => ({ ...prevMemory, favorite: !prevMemory.favorite }));
-            }}
-          >
+          <button id='favorite' onClick={handleFavoriteClick}>
             {newMemory.favorite ? 'Favorite' : 'No Favorite'}
           </button>
           <input

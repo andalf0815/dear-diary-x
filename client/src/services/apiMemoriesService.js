@@ -25,6 +25,22 @@ export async function saveMemory(data) {
   }
 }
 
+export async function updateMemory(data) {
+  try {
+    const response = await fetch(`/api/memories`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function deleteMemory(memoryId) {
   try {
     const response = await fetch(`/api/memories/${memoryId}`, {

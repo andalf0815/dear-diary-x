@@ -1,10 +1,9 @@
 import { DateTime } from 'luxon';
-import { MdDelete } from 'react-icons/md';
+import { MdDelete, MdEdit } from 'react-icons/md';
 import { deleteMemory } from '../services/apiMemoriesService';
 
 function MemoryCard(props) {
   const memory = props.memory;
-
 
   // Calculate the difference between today and the memory date
   const today = DateTime.now().startOf('day');
@@ -45,6 +44,11 @@ function MemoryCard(props) {
     }
   };
 
+  const handleEditMemory = () => {
+    props.onEditMemory && props.onEditMemory(memory);
+    props.onSetFormVisibility && props.onSetFormVisibility(true);
+  };
+
   return (
     <div id='memory-container' className='max-w-[60rem] min-w-[50%] lg:min-w-full p-3 snap-start'>
       <div id='memory' className='flex flex-col h-[20rem] p-4 border-slate-400 border-2 rounded-md shadow-lg'>
@@ -53,6 +57,7 @@ function MemoryCard(props) {
             {timeAgoText ? `${timeAgoText} on ` : ''} {memoryDate}
           </p>
           <div id='memory-functions' className='flex'>
+            <MdEdit className='text-blue-700 text-2xl cursor-pointer' onClick={handleEditMemory} />
             <MdDelete className='text-red-700 text-2xl cursor-pointer' onClick={handleDeleteClick} />
           </div>
         </div>
