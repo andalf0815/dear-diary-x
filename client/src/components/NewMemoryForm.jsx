@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { useEffect, useState } from 'react';
 
-import { saveMemory, updateMemory } from '../services/apiMemoriesService';
+import { addMemory, updateMemory } from '../services/apiMemoriesService';
 
 import TagGroup from './TagGroup';
 import EmotionRadioButton from './EmotionRadioButton';
@@ -100,7 +100,7 @@ function NewMemoryForm(props) {
         // Create new Memory
         if (!isUpdate) {
           memoryToSave._id = uuidv4(); // Add an _id prop if its a new memory
-          const response = await saveMemory(memoryToSave);
+          const response = await addMemory(memoryToSave);
 
           if (response.status === 409) {
             alert('Memory on this date already exists!');

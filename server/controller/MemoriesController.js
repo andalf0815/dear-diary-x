@@ -13,7 +13,7 @@ const getAllMemories = async (req, res) => {
 };
 
 // Save a memory
-const saveMemory = async (req, res) => {
+const addMemory = async (req, res) => {
   const data = req.body;
   try {
     // Check if a memory with the same UUID already exists
@@ -73,7 +73,7 @@ const deleteMemory = async (req, res) => {
 
 module.exports = {
   getAllMemories,
-  saveMemory,
+  addMemory,
   updateMemory,
   deleteMemory,
 };

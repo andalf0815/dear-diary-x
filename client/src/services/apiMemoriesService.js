@@ -9,7 +9,7 @@ export async function fetchMemories() {
   }
 }
 
-export async function saveMemory(data) {
+export async function addMemory(data) {
   try {
     const response = await fetch('/api/memories', {
       method: 'POST',
