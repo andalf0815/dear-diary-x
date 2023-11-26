@@ -51,7 +51,7 @@ function MemoryCard(props) {
 
   return (
     <div id='memory-container' className='max-w-[60rem] min-w-[50%] lg:min-w-full p-3 snap-start'>
-      <div id='memory' className='flex flex-col h-[20rem] p-4 border-slate-400 border-2 rounded-md shadow-lg'>
+      <div id='memory' className='flex flex-col h-96 p-4 border-slate-400 border-2 rounded-md shadow-lg'>
         <div id='memory-header' className='flex justify-between'>
           <p>
             {timeAgoText ? `${timeAgoText} on ` : ''} {memoryDate}

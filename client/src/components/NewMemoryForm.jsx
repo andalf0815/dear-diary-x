@@ -160,9 +160,9 @@ function NewMemoryForm(props) {
         }}
       />
       <div
-        className={`absolute top-16 flex flex-col items-center w-[500px] pt-20 bg-white border-2 rounded-md shadow-lg ${
+        className={`absolute top-16 flex flex-col items-center w-[500px] pt-20 border-2 rounded-md shadow-lg ${
           props.isFormVisible ? 'block is-active' : 'hidden'
-        } ${isEditing ? 'border-blue-400' : 'border-green-400'} sm:w-11/12`}
+        } ${isEditing ? 'border-blue-400 bg-blue-50' : 'border-green-400 bg-green-50'} sm:w-11/12`}
       >
         <span
           id='close-new-memory-form'

@@ -2,10 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
 html {
   @apply text-base;
 }
 
 .input-underline {
-  @apply px-3 py-1 text-slate-700 border-b-2 focus:border-b-blue-500 outline-none;
+  @apply px-3 py-1 text-slate-700 rounded-t-md border-b-2 bg-inherit focus:border-b-blue-500 outline-none;
 }
