@@ -1,20 +1,54 @@
 export async function fetchMemories() {
-  const response = await fetch('/api/memories');
-  const data = await response.json();
+  try {
+    const response = await fetch('/api/memories');
+    const data = await response.json();
 
-  return data;
+    return data;
+  } catch (error) {
+    throw error;
+  }
 }
 
-export async function saveMemory(data) {
-  const response = await fetch('/api/memories', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
+export async function addMemory(data) {
+  try {
+    const response = await fetch('/api/memories', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
 
-  if (response.ok) {
-    console.log('yuhu');
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function updateMemory(data) {
+  try {
+    const response = await fetch(`/api/memories`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function deleteMemory(memoryId) {
+  try {
+    const response = await fetch(`/api/memories/${memoryId}`, {
+      method: 'DELETE',
+    });
+
+    return memoryId;
+  } catch (error) {
+    throw error;
   }
 }

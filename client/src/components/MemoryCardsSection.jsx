@@ -28,7 +28,13 @@ function MemoryCardsSection(props) {
   return (
     <section className='flex flex-row justify-between w-full overflow-auto snap-mandatory snap-x'>
       {filteredMemories.map((memory) => (
-        <MemoryCard key={memory._id} memory={memory} />
+        <MemoryCard
+          key={memory._id}
+          memory={memory}
+          onDeleteMemory={props.onDeleteMemory}
+          onEditMemory={props.onEditMemory}
+          onSetFormVisibility={props.onSetFormVisibility}
+        />
       ))}
     </section>
   );

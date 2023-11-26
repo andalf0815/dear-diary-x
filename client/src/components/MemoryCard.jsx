@@ -1,10 +1,13 @@
 import { DateTime } from 'luxon';
+import { MdDelete, MdEdit } from 'react-icons/md';
+import { deleteMemory } from '../services/apiMemoriesService';
 
 function MemoryCard(props) {
   const memory = props.memory;
 
+  // Calculate the difference between today and the memory date
   const today = DateTime.now().startOf('day');
-  const memoryDate = DateTime.fromISO(memory.memoryDate).startOf('day');
+  let memoryDate = DateTime.fromISO(memory.memoryDate).startOf('day');
   const diffInDays = today.diff(memoryDate, 'days').toObject().days;
   const diffInYears = today.diff(memoryDate, 'years').toObject().years;
 
@@ -28,12 +31,36 @@ function MemoryCard(props) {
     timeAgoText = '';
   }
 
+  // Format the memoryDate in a better human readable format
+  memoryDate = memoryDate.toFormat('yyyy-MM-dd');
+
+  const handleDeleteClick = async () => {
+    if (!confirm('Do you really want to delete the memory?')) return;
+    try {
+      await deleteMemory(memory._id);
+      props.onDeleteMemory && props.onDeleteMemory(memory._id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleEditMemory = () => {
+    props.onEditMemory && props.onEditMemory(memory);
+    props.onSetFormVisibility && props.onSetFormVisibility(true);
+  };
+
   return (
     <div id='memory-container' className='max-w-[60rem] min-w-[50%] lg:min-w-full p-3 snap-start'>
       <div id='memory' className='flex flex-col h-[20rem] p-4 border-slate-400 border-2 rounded-md shadow-lg'>
-        <p>
-          {timeAgoText ? `${timeAgoText} on ` : ''} {memory.memoryDate}
-        </p>
+        <div id='memory-header' className='flex justify-between'>
+          <p>
+            {timeAgoText ? `${timeAgoText} on ` : ''} {memoryDate}
+          </p>
+          <div id='memory-functions' className='flex'>
+            <MdEdit className='text-blue-700 text-2xl cursor-pointer' onClick={handleEditMemory} />
+            <MdDelete className='text-red-700 text-2xl cursor-pointer' onClick={handleDeleteClick} />
+          </div>
+        </div>
         <h1>
           {memory.emotion} {memory.title}
         </h1>
