@@ -4,9 +4,17 @@ import { useNavigate } from 'react-router-dom';
 function Logout() {
   const navigate = useNavigate();
 
+  //******************//
+  //***USEE EFFECTS***//
+  //******************//
+
   useEffect(() => {
     navigate('/login');
   }, [navigate]);
+
+  //*********//
+  //***JSX***//
+  //*********//
 
   return (
     <div>

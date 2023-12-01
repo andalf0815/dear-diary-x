@@ -6,6 +6,10 @@ import MemoryCardsSection from '../components/MemoryCardsSection';
 import NewMemoryForm from '../components/NewMemoryForm';
 
 function Dashboard() {
+  //****************//
+  //***USE STATES***//
+  //****************//
+
   const [memories, setMemories] = useState([]); // State which contains all memories
   const [memoryToEdit, setMemoryToEdit] = useState(null); // State which contains the memory to edit
   const [isFormActive, setIsFormActive] = useState(false); // State which handles the visibility of the form component
@@ -14,6 +18,10 @@ function Dashboard() {
   const cardsSectionRef = useRef(null);
 
   let isFirstRender = true; // Flag to check if it's the first render of the component
+
+  //*****************//
+  //***USE EFFECTS***//
+  //*****************//
 
   useEffect(() => {
     if (isFirstRender) {
@@ -37,6 +45,10 @@ function Dashboard() {
     }
   }, [shouldScrollToMostLeftCard]);
 
+  //*****************//
+  //***HANDLE FCTS***//
+  //*****************//
+
   const handleAddMemory = (newMemory) => {
     // Check if the memory id is already available, if yes update it in the state
     // Otherwise create a new one
@@ -56,6 +68,10 @@ function Dashboard() {
   const handleFormVisibility = (status) => {
     setIsFormActive(status);
   };
+
+  //*********//
+  //***JSX***//
+  //*********//
 
   return (
     <>

@@ -1,4 +1,8 @@
 function EmotionRadioButton({ onSelectedEmotion, selected, emotion, index }) {
+  //*********//
+  //***JSX***//
+  //*********//
+
   return (
     <>
       <div className={`option ${selected ? 'bg-slate-500' : ''}`}>

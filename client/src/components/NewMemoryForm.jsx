@@ -7,38 +7,6 @@ import TagGroup from './TagGroup';
 import EmotionRadioButton from './EmotionRadioButton';
 
 function NewMemoryForm(props) {
-  const getCurrentDate = () => {
-    return new Date().toISOString().split('T')[0];
-  };
-
-  // Initialize the memory with an empty object
-  const initializedMemoryObject = {
-    title: '',
-    favorite: false,
-    memoryDate: getCurrentDate(),
-    emotion: '',
-    description: '',
-    activityTags: [],
-    locationTags: [],
-    peopleTags: [],
-  };
-
-  const [newMemory, setNewMemory] = useState(initializedMemoryObject); // State for the memory object
-  const [isEditing, setIsEditing] = useState(false); // State if the form is in edit or creation mode
-
-  useEffect(() => {
-    if (props.memoryToEdit) {
-      setIsEditing(true);
-      setNewMemory({
-        ...props.memoryToEdit,
-        memoryDate: props.memoryToEdit.memoryDate.substring(0, 10), // Bring the date format to yyy-mm-dd
-      });
-    } else {
-      setIsEditing(false);
-      setNewMemory(initializedMemoryObject);
-    }
-  }, [props.memoryToEdit]);
-
   const emotions = [
     '😀',
     '😅',
@@ -63,9 +31,57 @@ function NewMemoryForm(props) {
     '🤕',
   ];
 
+  const getCurrentDate = () => {
+    return new Date().toISOString().split('T')[0];
+  };
+
+  // Initialize the memory with an empty object
+  const initializedMemoryObject = {
+    title: '',
+    favorite: false,
+    memoryDate: getCurrentDate(),
+    emotion: '',
+    description: '',
+    activityTags: [],
+    locationTags: [],
+    peopleTags: [],
+  };
+
+  //****************//
+  //***USE STATES***//
+  //****************//
+
+  const [newMemory, setNewMemory] = useState(initializedMemoryObject); // State for the memory object
+  const [isEditing, setIsEditing] = useState(false); // State if the form is in edit or creation mode
+
+  //*****************//
+  //***USE EFFECTS***//
+  //*****************//
+
+  useEffect(() => {
+    if (props.memoryToEdit) {
+      setIsEditing(true);
+      setNewMemory({
+        ...props.memoryToEdit,
+        memoryDate: props.memoryToEdit.memoryDate.substring(0, 10), // Bring the date format to yyy-mm-dd
+      });
+    } else {
+      setIsEditing(false);
+      setNewMemory(initializedMemoryObject);
+    }
+  }, [props.memoryToEdit]);
+
+  //*****************//
+  //***HELPER FCTS***//
+  //*****************//
+
   const validateForm = () => {
     return newMemory.title && newMemory.memoryDate && newMemory.emotion;
   };
+
+  //*****************//
+  //***HANDLE FCTS***//
+  //*****************//
 
   const handleFavoriteClick = () => {
     setNewMemory((prevMemory) => ({ ...prevMemory, favorite: !prevMemory.favorite }));
@@ -110,7 +126,7 @@ function NewMemoryForm(props) {
             return;
           }
         } else {
-          // TODO: Update existing Memory
+          // Update existing Memory
           const response = await updateMemory(memoryToSave);
 
           if (!response.ok) {
@@ -142,6 +158,10 @@ function NewMemoryForm(props) {
     handleFormVisibility(false);
     handleClearClick();
   };
+
+  //*********//
+  //***JSX***//
+  //*********//
 
   return (
     <div className='flex flex-col items-center justify-center w-full h-24'>

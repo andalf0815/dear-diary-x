@@ -4,6 +4,10 @@ import MemoryCard from './MemoryCard';
 function MemoryCardsSection(props) {
   const filteredMemories = filterDates(props.memories);
 
+  //*****************//
+  //***HELPER FCTS***//
+  //*****************//
+
   function filterDates(memories) {
     const today = DateTime.now().startOf('day');
 
@@ -24,6 +28,10 @@ function MemoryCardsSection(props) {
       return isWithinOneWeek || isOneMonthAgo || isExactlyYearsAgo;
     });
   }
+
+  //*********//
+  //***JSX***//
+  //*********//
 
   return (
     <section

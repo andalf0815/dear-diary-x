@@ -34,6 +34,10 @@ function MemoryCard(props) {
   // Format the memoryDate in a better human readable format
   memoryDate = memoryDate.toFormat('yyyy-MM-dd');
 
+  //*****************//
+  //***HANDLE FCTS***//
+  //*****************//
+
   const handleDeleteClick = async () => {
     if (!confirm('Do you really want to delete the memory?')) return;
     try {
@@ -48,6 +52,10 @@ function MemoryCard(props) {
     props.onEditMemory && props.onEditMemory(memory);
     props.onSetFormVisibility && props.onSetFormVisibility(true);
   };
+
+  //*********//
+  //***JSX***//
+  //*********//
 
   return (
     <div id='memory-container' className='max-w-[60rem] min-w-[50%] lg:min-w-full p-3 snap-start'>

@@ -1,10 +1,19 @@
 function TagGroup({ tagTitle, tags = [], onAddTag, onRemoveTag }) {
-  const addTag = (event) => {
+
+  //*****************//
+  //***HANDLE FCTS***//
+  //*****************//
+
+  const handleAddTag  = (event) => {
     if (event.target.value.trim()) {
       onAddTag && onAddTag(event.target.value);
       event.target.value = '';
     }
   };
+
+  //*********//
+  //***JSX***//
+  //*********//
 
   return (
     <div className='h-16'>
@@ -13,12 +22,10 @@ function TagGroup({ tagTitle, tags = [], onAddTag, onRemoveTag }) {
         placeholder={tagTitle}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
-            addTag(event);
+            handleAddTag(event);
           }
         }}
-        onBlur={(event) => {
-          addTag(event);
-        }}
+        onBlur={HandleAddTag}
         className='input-underline w-full'
       />
       <div className='tags flex gap-2 overflow-auto'>
