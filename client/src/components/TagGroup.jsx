@@ -25,7 +25,7 @@ function TagGroup({ tagTitle, tags = [], onAddTag, onRemoveTag }) {
             handleAddTag(event);
           }
         }}
-        onBlur={HandleAddTag}
+        onBlur={handleAddTag}
         className='input-underline w-full'
       />
       <div className='tags flex gap-2 overflow-auto'>
