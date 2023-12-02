@@ -7,6 +7,7 @@ import TagGroup from './TagGroup';
 import EmotionRadioButton from './EmotionRadioButton';
 
 function NewMemoryForm(props) {
+  const MAX_IMG_SIZE_KB = import.meta.env.VITE_MAX_IMG_SIZE_KB; // Maximum image size to upload in kilobytes
   const emotions = [
     '😀',
     '😅',
@@ -159,6 +160,30 @@ function NewMemoryForm(props) {
     handleClearClick();
   };
 
+  const handleImageChange = (event) => {
+    const selectedFiles = event.target.files;
+    let uploadedImages = [];
+
+    // Ensure only up to 4 images are selected
+    for (let i = 0; i < Math.min(selectedFiles.length, 4); i++) {
+      const file = selectedFiles[i];
+      const fileSizeKB = file.size / 1024; // Get file size in kilobytes
+
+      if (fileSizeKB <= MAX_IMG_SIZE_KB) {
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          uploadedImages.push(e.target.result);
+          setNewMemory({ ...newMemory, images: uploadedImages });
+        };
+
+        reader.readAsDataURL(file);
+      } else {
+        alert(`File '${file.name}' exceeds the maximum allowed size of ${MAX_IMG_SIZE_KB}KB.`);
+      }
+    }
+  };
+
   //*********//
   //***JSX***//
   //*********//
@@ -170,7 +195,7 @@ function NewMemoryForm(props) {
         value={newMemory.title}
         type='text'
         placeholder='Add new memory'
-        className='absolute top-20 z-10 w-60 text-xl input-underline'
+        className='absolute top-16 z-10 w-60 text-xl input-underline'
         onFocus={() => handleFormVisibility(true)}
         onChange={(event) => {
           setNewMemory((prevMemory) => ({ ...prevMemory, title: event.target.value }));
@@ -180,7 +205,7 @@ function NewMemoryForm(props) {
         }}
       />
       <div
-        className={`absolute top-16 flex flex-col items-center w-[500px] pt-20 border-2 rounded-md shadow-lg ${
+        className={`absolute top-12 flex flex-col items-center w-[500px] pt-16 border-2 rounded-md shadow-lg ${
           props.isFormVisible ? 'block is-active' : 'hidden'
         } ${isEditing ? 'border-blue-400 bg-blue-50' : 'border-green-400 bg-green-50'} sm:w-11/12`}
       >
@@ -191,7 +216,7 @@ function NewMemoryForm(props) {
         >
           +
         </span>
-        <div className='flex flex-col gap-6 w-full h-full p-5'>
+        <div className='flex flex-col gap-2 w-full h-full p-5'>
           <button id='favorite' onClick={handleFavoriteClick}>
             {newMemory.favorite ? 'Favorite' : 'No Favorite'}
           </button>
@@ -233,6 +258,7 @@ function NewMemoryForm(props) {
               setNewMemory((prevMemory) => ({ ...prevMemory, description: event.target.value.trim() }));
             }}
           ></textarea>
+          {/* Tags */}
           <div className='flex flex-col gap-3'>
             <TagGroup
               tagTitle='Activities'
@@ -252,6 +278,15 @@ function NewMemoryForm(props) {
               onAddTag={(tag) => handleAddTag('peopleTags', tag)}
               onRemoveTag={(index) => handleRemoveTag('peopleTags', index)}
             />
+          </div>
+          {/* Image upload */}
+          <div>
+            <input type='file' accept='image/*' multiple onChange={handleImageChange} />
+            <div className='flex justify-between'>
+              {newMemory.images?.map((image, index) => (
+                <img key={index} src={image} alt={`Uploaded Image ${index + 1}`} className='w-24 h-24 m-1' />
+              ))}
+            </div>
           </div>
           <div className='flex flex-col gap-2 px-5'>
             <button
