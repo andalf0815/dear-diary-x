@@ -9,14 +9,11 @@ export async function fetchMemories() {
   }
 }
 
-export async function addMemory(data) {
+export async function addMemory(formData) {
   try {
     const response = await fetch('/api/memories', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
+      body: formData,
     });
 
     return response;

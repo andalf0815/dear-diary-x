@@ -17,24 +17,19 @@ function Dashboard() {
 
   const cardsSectionRef = useRef(null);
 
-  let isFirstRender = true; // Flag to check if it's the first render of the component
-
   //*****************//
   //***USE EFFECTS***//
   //*****************//
 
+  // Useeffect for changes in memories
   useEffect(() => {
-    if (isFirstRender) {
-      (async function () {
-        const loadedMemories = await fetchMemories();
-        setMemories(loadedMemories);
-      })();
-    } else {
-      // Order the memories according to the date desc
-      setMemories((oldMemories) => [...oldMemories].sort((a, b) => new Date(b.memoryDate) - new Date(a.memoryDate)));
-    }
-  }, [memories]);
+    (async function () {
+      const loadedMemories = await fetchMemories();
+      setMemories(loadedMemories);
+    })();
+  }, []);
 
+  // Useeffect for shouldScrollToMostLeftCard (New added memory)
   useEffect(() => {
     if (shouldScrollToMostLeftCard && cardsSectionRef.current) {
       // set a small timeout so that the new memory card is created and then it gets scrolled to most left card
@@ -50,15 +45,21 @@ function Dashboard() {
   //*****************//
 
   const handleAddMemory = (newMemory) => {
-    // Check if the memory id is already available, if yes update it in the state
-    // Otherwise create a new one
-    const memoryWithSameId = memories.find((memory) => memory._id === newMemory._id);
-    if (memoryWithSameId) {
-      setMemories((oldMemories) => oldMemories.map((memory) => (memory._id === newMemory._id ? newMemory : memory)));
-      return;
+    const sortMemoriesByDate = (memoriesArray) =>
+      memoriesArray.sort((a, b) => new Date(b.memoryDate) - new Date(a.memoryDate));
+
+    const existingMemoryIndex = memories.findIndex((memory) => memory._id === newMemory._id);
+
+    if (existingMemoryIndex !== -1) {
+      // Update an already existing memory
+      const updatedMemories = memories.map((memory, index) => (index === existingMemoryIndex ? newMemory : memory));
+      setMemories(sortMemoriesByDate(updatedMemories));
+    } else {
+      // Create a new memory and add it to the state
+      const updatedMemories = sortMemoriesByDate([...memories, newMemory]);
+      setShouldScrollToMostLeftCard(true); // Scroll to the most left card
+      setMemories(updatedMemories);
     }
-    setMemories((oldMemories) => [...oldMemories, newMemory]);
-    setShouldScrollToMostLeftCard(true); // Scroll to the most left card
   };
 
   const handleEditMemory = (memoryToUpdate) => {

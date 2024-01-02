@@ -72,7 +72,7 @@ function MemoryCard(props) {
         <h1>
           {memory.emotion} {memory.title}
         </h1>
-        <div className='flex justify-between'>
+        <div className='flex flex-col justify-between'>
           <div className='flex flex-col'>
             <p>{memory.description}</p>
             <div className='flex'>

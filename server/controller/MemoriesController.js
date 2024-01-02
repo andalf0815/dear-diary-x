@@ -1,4 +1,5 @@
 const Memory = require('../models/Memory');
+const Image = require('../models/Image');
 const { v4: uuidv4 } = require('uuid');
 
 // Get all memory
@@ -15,19 +16,37 @@ const getAllMemories = async (req, res) => {
 // Save a memory
 const addMemory = async (req, res) => {
   const data = req.body;
+  const images = req.files;
+
   try {
-    // Check if a memory with the same UUID already exists
+    // Check if a memory on the same date already exists
     const existingMemory = await Memory.findOne({ memoryDate: data.memoryDate });
     if (existingMemory) {
       // If memory exists, send a response and do not save a new one
       return res.status(409).send('Memory with this UUID already exists');
     }
 
-    // If no existing memory, create a new one
-    const memory = await Memory.create(data);
-    res.json(memory);
+    // Store the images
+    const uploadedImages = await Promise.all(
+      images.map(async (image) => {
+        // Store each image and get its ID
+        const storedImageId = await storeImage(image);
+        return storedImageId;
+      })
+    );
+
+    // Create a new memory entry with references to the uploaded images
+    const newMemory = new Memory({
+      ...data,
+      images: uploadedImages, // Store references to the uploaded images
+    });
+
+    // Save the new memory entry to the MongoDB collection
+    const savedMemory = await newMemory.save();
+
+    res.json(savedMemory);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).send('Server Error');
   }
 };
@@ -68,6 +87,29 @@ const deleteMemory = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).send('Server Error');
+  }
+};
+
+//*****************//
+//***HELPER FCTS***//
+//*****************//
+
+// Function to store an image
+const storeImage = async (imageData) => {
+  try {
+    // Logic to store the image and return its ID
+    const image = new Image({
+      filename: imageData.filename,
+      contentType: imageData.contentType,
+      metadata: imageData.metadata,
+      data: imageData.data,
+    });
+
+    const savedImage = await image.save();
+    return savedImage._id;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to store the image');
   }
 };
 

@@ -112,12 +112,25 @@ function NewMemoryForm(props) {
     if (validateForm()) {
       const isUpdate = newMemory._id ? true : false;
       const memoryToSave = { ...newMemory };
+      const formData = new FormData();
 
       try {
         // Create new Memory
         if (!isUpdate) {
           memoryToSave._id = uuidv4(); // Add an _id prop if its a new memory
-          const response = await addMemory(memoryToSave);
+
+          // Add the states props in the formData which is then send to the server
+          Object.keys(memoryToSave).forEach((key) => {
+            if (key === 'images') {
+              memoryToSave.images.forEach((image) => {
+                formData.append('image', image);
+              });
+            } else {
+              formData.append(key, memoryToSave[key]);
+            }
+          });
+
+          const response = await addMemory(formData);
 
           if (response.status === 409) {
             alert('Memory on this date already exists!');
@@ -169,19 +182,16 @@ function NewMemoryForm(props) {
       const file = selectedFiles[i];
       const fileSizeKB = file.size / 1024; // Get file size in kilobytes
 
+      // Allow only a max size of MAX_IMG_SIZE_KB
       if (fileSizeKB <= MAX_IMG_SIZE_KB) {
-        const reader = new FileReader();
-
-        reader.onload = (e) => {
-          uploadedImages.push(e.target.result);
-          setNewMemory({ ...newMemory, images: uploadedImages });
-        };
-
-        reader.readAsDataURL(file);
+        uploadedImages.push(file);
       } else {
         alert(`File '${file.name}' exceeds the maximum allowed size of ${MAX_IMG_SIZE_KB}KB.`);
+        break;
       }
     }
+
+    setNewMemory({ ...newMemory, images: uploadedImages });
   };
 
   //*********//
