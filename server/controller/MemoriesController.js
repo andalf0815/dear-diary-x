@@ -1,6 +1,7 @@
+const fs = require('fs').promises;
+
 const Memory = require('../models/Memory');
-const Image = require('../models/Image');
-const { v4: uuidv4 } = require('uuid');
+const { uploadDestination } = require('../config/multer.js');
 
 // Get all memory
 const getAllMemories = async (req, res) => {
@@ -17,29 +18,37 @@ const getAllMemories = async (req, res) => {
 const addMemory = async (req, res) => {
   const data = req.body;
   const images = req.files;
-
+  let imagePaths = [];
+  
   try {
     // Check if a memory on the same date already exists
     const existingMemory = await Memory.findOne({ memoryDate: data.memoryDate });
     if (existingMemory) {
+      // Delete the uploaded images from the folder
+      for (const image of images) {
+        try {
+          await fs.unlink(image.path);
+        } catch (error) {
+          console.error(`Error deleting image ${image.path}:`, error);
+        }
+      }
+
       // If memory exists, send a response and do not save a new one
       return res.status(409).send('Memory with this UUID already exists');
     }
-
-    // Store the images
-    const uploadedImages = await Promise.all(
-      images.map(async (image) => {
-        // Store each image and get its ID
-        const storedImageId = await storeImage(image);
-        return storedImageId;
-      })
-    );
+    // if images are uploaded, then get the paths and save in in an array
+    if (images.length !== 0) {
+      imagePaths = images.map((image) => image.path);
+    }
 
     // Create a new memory entry with references to the uploaded images
-    const newMemory = new Memory({
-      ...data,
-      images: uploadedImages, // Store references to the uploaded images
-    });
+    const newMemory = new Memory(
+      imagePaths
+        ? { ...data, imagePaths }
+        : {
+            ...data,
+          }
+    );
 
     // Save the new memory entry to the MongoDB collection
     const savedMemory = await newMemory.save();
@@ -93,25 +102,6 @@ const deleteMemory = async (req, res) => {
 //*****************//
 //***HELPER FCTS***//
 //*****************//
-
-// Function to store an image
-const storeImage = async (imageData) => {
-  try {
-    // Logic to store the image and return its ID
-    const image = new Image({
-      filename: imageData.filename,
-      contentType: imageData.contentType,
-      metadata: imageData.metadata,
-      data: imageData.data,
-    });
-
-    const savedImage = await image.save();
-    return savedImage._id;
-  } catch (error) {
-    console.error(error);
-    throw new Error('Failed to store the image');
-  }
-};
 
 module.exports = {
   getAllMemories,

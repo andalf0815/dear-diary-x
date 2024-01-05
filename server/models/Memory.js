@@ -37,7 +37,10 @@ const MemorySchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
-  images: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Image', default: [] }], // References to images using GridFS
+  imagePaths: {
+    type: [String],
+    default: [],
+  }
 });
 
 const Memory = mongoose.model('Memory', MemorySchema);
